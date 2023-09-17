@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group 'com.pocolifo'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'org.wikidata.wdtk:wdtk-wikibaseapi:0.14.3' // because i can't be bothered to use the rest api
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'io.javalin:javalin:5.2.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.3'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.pocolifo.holiday.HolidayWebServiceMain'
+        )
+
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
+
+        exclude {
+            'META-INF/**'
+        }
+
+        include {
+            'META-INF/MANIFEST.MF'
+        }
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
